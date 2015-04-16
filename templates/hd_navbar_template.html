@@ -1,0 +1,23 @@
+<div ng-init="collapseMenu=true">
+
+  <div class="hd-navbar">
+    <a href="index.html"><img class="hd-brand" src="imgs/brand.png"></a>
+  
+    <a href="about.html" class="btn hd-navbar-btn hidden-xs">ABOUT</a>
+    <a href="webdev.html" class="btn hd-navbar-btn hidden-xs">WEBDEV</a>
+    <a href="contact.html" class="btn hd-navbar-btn hidden-xs">CONTACT</a>
+  
+    <span class="glyphicon glyphicon-menu-hamburger
+                 hd-nav
+                 hidden-sm hidden-md hidden-lg"
+          ng-click="collapseMenu=!collapseMenu"></span>
+  </div>
+
+  <div class="hd-navbar-dropdown hidden-lg hidden-md hidden-sm btn-group-vertical" collapse="collapseMenu">
+    <a class="btn hd-navbar-mobile-btn" href="index.html">HOME</a>
+    <a class="btn hd-navbar-mobile-btn" href="about.html">ABOUT</a>
+    <a class="btn hd-navbar-mobile-btn" href="webdev.html">WEBDEV</a>
+    <a class="btn hd-navbar-mobile-btn" href="contact.html">CONTACT</a>
+  </div>
+  
+</div>

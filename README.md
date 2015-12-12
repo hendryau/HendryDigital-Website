@@ -1,2 +1,2 @@
 # AustinHendry.com
-## my personal [website](http://austinhendry.com).
+my personal [website](http://austinhendry.com).

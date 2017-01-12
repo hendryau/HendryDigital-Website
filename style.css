@@ -6,9 +6,7 @@ img {
 	max-width: 100%;
 }
 body {
-	padding-right: 15px;
-  	padding-left: 15px;
-  	line-height: 1.5em;
+	line-height: 1.5em;
   	font-family: Verdana, Geneva, sans-serif;
 }
 header, footer {
@@ -24,15 +22,6 @@ body > section,
 body > footer > section {
 	margin-top: 20px;
 	margin-bottom: 20px;
-}
-@media (min-width: 768px) {
-	body > section {
-		margin-left: 29%;
-		margin-right: 29%;
-	}
-	hr {
-		width: 70%;
-	}
 }
 body {
 	background-color: #005280;
@@ -67,4 +56,14 @@ summary {
 .button:hover {
 	color: grey;
 	border: 1px solid grey;
+}
+
+@media (min-width: 768px) {
+	body > section {
+		margin-left: 29%;
+		margin-right: 29%;
+	}
+	hr {
+		width: 70%;
+	}
 }

@@ -1,0 +1,70 @@
+body > header > h1,
+body > footer > section > h1 {
+	display: none;
+}
+img {
+	max-width: 100%;
+}
+body {
+	padding-right: 15px;
+  	padding-left: 15px;
+  	line-height: 1.5em;
+  	font-family: Verdana, Geneva, sans-serif;
+}
+header, footer {
+	text-align: center;
+}
+body > section {
+	padding: 1em 1.5em 1em 1.5em;
+	background-color: white;
+	border-radius: 35px;
+}
+body > header,
+body > section,
+body > footer > section {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+@media (min-width: 768px) {
+	body > section {
+		margin-left: 29%;
+		margin-right: 29%;
+	}
+	hr {
+		width: 70%;
+	}
+}
+body {
+	background-color: #005280;
+}
+section, header > h2, summary {
+	color: #005280;
+}
+body > footer {
+	color: #5ba8ff;
+}
+.button, body > section > footer, header {
+	color: #a8a8a8;
+}
+hr {
+	width: 75%;	
+}
+summary {
+	font-style: italic;
+	margin: 1em 0em 1em 0em;
+}
+.paginator, .posts, summary {
+	text-align: center;	
+}
+.button {
+	padding:10px 20px 10px 20px;
+	border-radius:26px;
+	text-decoration: none;
+	border: 1px solid #a8a8a8;
+	display: inline-block;
+	margin: .5em 0em .5em 0em;
+}
+.button:hover {
+	color: grey;
+	border: 1px solid grey;
+}

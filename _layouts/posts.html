@@ -1,0 +1,28 @@
+{% include header.html %}
+<section>
+  <section class="posts">
+  {% for post in paginator.posts %}
+    <section class="post">
+      {% include post-header.html post=post %}
+      <a href="{{ post.url }}" class="button">Read more</a>
+    </section>
+    <hr>
+  {% endfor %}
+  </section>
+    
+  <section class="paginator">
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path }}" class="button">Previous</a>
+  {% else %}
+    <span>Previous</span>
+  {% endif %}
+  <span>Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path }}" class="button">Next</a>
+  {% else %}
+    <span>Next</span>
+  {% endif %}
+  </section>
+  
+</section>
+{% include footer.html %}

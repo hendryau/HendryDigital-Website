@@ -20,8 +20,8 @@ body > section {
 body > header,
 body > section,
 body > footer > section {
-	margin-top: 20px;
-	margin-bottom: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 body {
 	background-color: #005280;
@@ -32,8 +32,11 @@ section, header > h2, summary {
 body > footer, .fa {
 	color: #5ba8ff;
 }
+body > footer a {
+	text-decoration: none;
+}
 .fa {
-	padding: 0em .25em 0em .25em;
+	padding: 0em .1em 0em .1em;
 }
 .button, body > section > footer, header {
 	color: #a8a8a8;

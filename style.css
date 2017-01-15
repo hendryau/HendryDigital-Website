@@ -29,8 +29,11 @@ body {
 section, header > h2, summary {
 	color: #005280;
 }
-body > footer {
+body > footer, .fa {
 	color: #5ba8ff;
+}
+.fa {
+	padding: 0em .25em 0em .25em;
 }
 .button, body > section > footer, header {
 	color: #a8a8a8;

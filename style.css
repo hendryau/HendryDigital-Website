@@ -63,6 +63,12 @@ summary {
 	color: grey;
 	border: 1px solid grey;
 }
+pre {
+	background-color: #e6e6ff;
+	padding: 1em;
+	line-height: 1.5em;
+	overflow: auto;
+}
 
 @media (min-width: 768px) {
 	body > section {

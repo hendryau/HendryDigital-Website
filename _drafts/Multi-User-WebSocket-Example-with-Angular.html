@@ -1,0 +1,167 @@
+This project runs an express web server which hosts an angular app. Internally. The data is mocked for easy environment setup.
+
+Benefit of running TypeScript on the front and backend, we can use the same code to execute the Command pattern to update the data.
+
+Caveats with angular
+
+Command pattern is key! Client should not modify its data directly, rely on commands issued by server socket to execute. Makes for simple management
+
+what about race conditions?
+
+Plenty of improvements to be made (have a list) but it complicates things, this is like a first cut end-to-end example
+
+separate view logic from data logic!
+
+design:
+
+server
+-------
++ server listens for websocket connections
++ on client connection, sends a create command for each entry in database
++ when a command is issued to the server, it executes the command, and sends the command back to all clients
+
+client
+-------
++ on page launch, websocket connection is made with server
++ client listens for messages containing commands and executes them when they arrive.
+
+
+---
+layout: post
+title: Multi-User WebSocket Example with Angular
+summary: A quick example of WebSocket api usage with Angular to facilitate a real-time multi-user application.
+fork: https://github.com/hendryau/Multi-User-WebSocket-Example
+---
+
+<p>Every website you visit is a request to a server for some stuff. This is HTTP in a nutshell, the backbone of the internet. But what if a web page doesn't know what to ask for? What if a server has to tell its client something? It better use a WebSocket.</p>
+
+<p>This sample application consists of a page that renders modifiable data. If the page is viewed by multiple clients, they will all see the same data. If a client creates, deletes, or updates data, the change will be broadcast by the server to all clients so they can update their rendered data.</p> 
+
+<p>I've assembled a single server which hosts the WebSocket endpoints as well as an Angular application. This makes standing this application standup a cinch. As an added bonus, I get to reuse a decent bit code in <i>both</i> the client and server, but more on that later.</p>
+
+<p>The data used in this example is mocked and described by the following interface:</p>
+
+<pre>
+export interface Data {
+    id: number
+}
+</pre>
+
+<p>This sort of multi-user experience lends itself to the command pattern. Each message sent via a WebSocket is a command. The command specifies which data needs to be changed and the callback which will execute the change. Since these messages with be JSONified and sent across the network, a cmdType property indicates what type of command it is. This can then be used to rebuild the command once it's received. The execute callback an array of data, the data the consumer wants to act upon.<p/>
+
+<pre>
+export interface Command {
+    data: Data
+    cmdType: string
+    execute: (dataArr: Data[]) => void
+}
+</pre>
+
+<p>Three types of commands implement the Command interface:</p>
+
+<pre>
+export class CreateCmd implements Command {
+
+    constructor(public data: Data) { }
+
+    public cmdType: string = "CREATE";
+
+    public execute(dataArr: Data[]): void {
+        dataArr.push(this.data);
+    }
+
+}
+
+export class DeleteCmd implements Command {
+
+    constructor(public data: Data) { }
+
+    public cmdType: string = "DELETE";
+
+    public execute(dataArr: Data[]) {
+        var dataInstance = dataArr.find(d => d.id === this.data.id );
+        dataArr.splice(dataArr.indexOf(dataInstance), 1);
+    }
+
+}
+
+export class UpdateCmd implements Command {
+
+    constructor(public data: Data) { }
+
+    public cmdType: string = "UPDATE";
+
+    public execute(dataArr: Data[]) {
+        var dataInstance = dataArr.find(d => d.id === this.data.id);
+        for (let k in this.data) {
+            if (k === "id") {
+                continue;
+            }
+            dataInstance[k] = this.data[k];
+        }
+    }
+
+}
+</pre>
+
+<h3>The Server</h3>
+
+<p>The server uses a command pattern to handle data modification.</p>
+
+<h3>The Client</h3>
+
+<p>The client subscribes to the WebSocket service and waits for messages. I've wrapped a WebSocket singleton in an injectable service. This way, any number of components or other message consumers can register to the onMessage Observable and act accordingly. Here's the service:</p>
+
+<pre>
+@Injectable()
+export class WebSocketService {
+
+	private static socket: WebSocket = new WebSocket("ws://localhost:1502");
+
+	private static onOpenObs: Observable<MessageEvent> = Observable.fromEvent(WebSocketService.socket, "open");
+
+	private static onMessageObs: Observable<MessageEvent> = Observable.fromEvent(WebSocketService.socket, "message");
+
+	public onMessage(): Observable<MessageEvent> {
+	    return WebSocketService.onMessageObs;
+	}
+
+	public onOpen(): Observable<MessageEvent> {
+	    return WebSocketService.onOpenObs;
+	}
+
+	public send(msg: string): void {
+	    WebSocketService.socket.send(msg);
+	}
+
+}
+</pre>
+
+<p>Here's the example app's bootstrapped component, which registers with the onMessage Observable in its constructor. Whenever a message comes in, the message is parsed, built into a Command, and executed against the view's data array.</p>
+
+<pre>
+@Component({
+    selector: "root",
+    template: `
+        &lt;button (click)="createData()"&gt;New&lt;/button&gt;
+        &lt;data *ngFor="let data of dataArr" [data]="data"&gt;&lt;/data&gt;
+    `
+})
+export class RootComponent {
+
+    private dataArr: Data[] = [];
+
+    constructor(private webSocketService: WebSocketService) {
+        this.webSocketService.onMessage().subscribe((msgEvt: MessageEvent) => {
+            let cmdJson: any = JSON.parse(msgEvt.data);
+            let cmd: Command = CmdUtil.fromJson(cmdJson);
+            cmd.execute(this.dataArr);
+        });
+    }
+
+    private createData(): void {
+        this.webSocketService.send(JSON.stringify(new CreateCmd({ id: null })));
+    }
+
+}
+</pre>

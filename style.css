@@ -29,6 +29,10 @@ body {
 section, header > h2, summary {
 	color: #005280;
 }
+h2 > a {
+    text-decoration: none;
+    color: inherit;
+}
 body > footer, .fa {
 	color: #5ba8ff;
 }

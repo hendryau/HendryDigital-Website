@@ -1,5 +1,5 @@
 <header>
-    <h2>{{ include.post.title }}</h2>
+    <h2><a href="{{include.post.url}}">{{ include.post.title }}</a></h2>
     <div>{{ include.post.date | date: '%B %d, %Y' }}</div>
     <summary>{{ include.post.summary }}</summary>
     {% if include.showForkBtn and include.post.forkUrl != null %}

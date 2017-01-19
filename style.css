@@ -82,12 +82,21 @@ pre {
 	overflow: auto;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 400px) {
+	body > section {
+		margin-left: 10%;
+		margin-right: 10%;
+	}
+}
+@media (min-width: 1000px) {
+	body > section {
+		margin-left: 20%;
+		margin-right: 20%;
+	}
+}
+@media (min-width: 1300px) {
 	body > section {
 		margin-left: 29%;
 		margin-right: 29%;
-	}
-	hr {
-		width: 70%;
 	}
 }

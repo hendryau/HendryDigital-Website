@@ -7,19 +7,19 @@ forkUrl: https://github.com/hendryau/Multi-User-WebSocket-Example
 
 <p>Every website you visit is a request to a server for some stuff. This is HTTP in a nutshell, the backbone of the internet. But what if a web page doesn't know what to ask for? What if the server has to tell its client something? Consider using WebSockets.</p>
 
-<p>This sample application consists of a page that renders modifiable data. If the page is viewed by multiple clients, they will all see the same data. If a client creates, deletes, or updates data, the change will be broadcast by the server to all clients so they can update their rendered data.</p> 
+<p>This sample application consists of a page that renders modifiable data. If the page is viewed by multiple clients, they will all see the same data. If a client creates, deletes, or updates data, the change will be broadcast by the server to all clients to be updated automatically.</p> 
 
 <p>I've assembled a server which hosts the WebSocket endpoints as well as an Angular application. This makes standing it up a cinch. As an added bonus, I get to reuse a decent bit code in <i>both</i> the client and server, but more on that later.</p>
 
 <h3 href="#Setup">Setup</h3>
 
-<p>The default domain and port are <span class="code">locasthost</span> and <span class="code">1502</span> respectively. They can be configured in <span class="code">app/server-config.ts</span>. Note that if you want to test this app across multiple machines you must provide a domain other than localhost.</p>
+<p>The default domain and port are <span class="code">locasthost</span> and <span class="code">1502</span> respectively. They can be configured in <span class="code">app/server-config.ts</span>. Note that if you want to test this app across multiple machines you must provide a domain other than <span class="code">localhost.</span></p>
 
 <p>Open your console and <span class="code">cd</span> to the location where you've forked the repo. From there, run <span class="code">npm install</span> followed by <span class="code">npm run</span> to boot it up.</p>
 
 <h3>The Server</h3>
 
-<p>Behind the scenes, <span class="code">server.ts</span>, the application entry point, is executed. This instantiates a new <span class="code">WebSocketServerWrapper</span>, a wrapper class I wrote, containing a <a href="https://github.com/websockets/ws">WebSocketServer</a>. This is just one WebSocket implementation for Node which I've integrated with <a href="http://expressjs.com/">Express</a> for this example. Once the server is up, it's ready to receive messages. Three things are tracked by the server... <span class="code">WebSocketServerWrapper#sockets</span> (the open WebSocket connections), <span class="code">WebSocketServerWrapper#dataArr</span> (the mocked database), and <span class="code">WebSocketServerWrapper#idCounter</span>. The <span class="code">idCounter</span> is a quick way to assign unique ids every time a client asks to create a new <span class="code">Data</span> object.</p>
+<p>Behind the scenes, <span class="code">server.ts</span>, the application entry point, is executed. This creates a new <span class="code">WebSocketServerWrapper</span>, a wrapper that contains a <a href="https://github.com/websockets/ws">WebSocketServer</a> (a WebSocket implementation for Node). This is plugged in to a vanilla <a href="http://expressjs.com/">Express</a> server. Once the server is up, it's ready to receive messages. Three things are managed by the server... <span class="code">WebSocketServerWrapper#sockets</span> (the open WebSocket connections), <span class="code">WebSocketServerWrapper#dataArr</span> (the mocked database), and <span class="code">WebSocketServerWrapper#idCounter</span>. The <span class="code">idCounter</span> is a quick way to assign unique ids every time a client asks to create a new <span class="code">Data</span> object.</p>
 
 <pre>
 import {CommandUtil} from "./app/command/command-util";
@@ -94,7 +94,7 @@ class WebSocketServerWrapper {
 (() => new WebSocketServerWrapper())();
 </pre>
 
-<p>Notice that every time a new WebSocket connection is established, the server iterates over each <span class="code">Data</span> entry in its <span class="code">dataArr</span> and issues a corresponding <span class="code">CreateCommand</span>. This tells the newly connected client that there is new data to render. This is the only case in which a command originates from the server directly and not a client.</p>
+<p>Notice that every time a new WebSocket connection is established, the server iterates over each <span class="code">Data</span> entry in its <span class="code">dataArr</span> and issues a corresponding <span class="code">CreateCommand</span>. This tells the newly connected client that there is new data to render. This is a special case in which a command originates from the server directly and not a client.</p>
 
 <p>The data used in this example is mocked and described by the <span class="code">Data</span> interface:</p>
 
@@ -186,7 +186,7 @@ export class UpdateCommand implements Command {
 
 <h3 href="#The-Client">The Client</h3>
 
-<p>The client subscribes to an injectable service, <span class="code">WebSocketService</span>, and waits for messages. This service wraps a static WebSocket singleton. Using this paradigm, any number of components/message consumers can subscribe to <span class="code">WebSocketService#onMessage()</span> and act accordingly. Here's the service:</p>
+<p>The client subscribes to an injectable service, <span class="code">WebSocketService</span>, and waits for messages. This service wraps a static WebSocket singleton. Using this paradigm, any number of components can subscribe to <span class="code">WebSocketService#onMessage()</span> and act accordingly. Here's the service:</p>
 
 <pre>
 import {Injectable} from "@angular/core";
@@ -217,7 +217,7 @@ export class WebSocketService {
 }
 </pre>
 
-<p>The bootstrapped component, <span class="code">RootComponent</span>, subscribes to <span class="code">WebSocketService#onMessage()</span> in its constructor. Whenever a message comes in, the client acts. Here is where the code reusage I mentioned earlier comes in. The same mechanism which the server uses to apply commands to its data is also used by the client. All messages that are received by the client are assembled into a <span class="code">Command</span> and executed against the clients's data array. This way, the client's data is always reflective of the server's. Awesome!</p>
+<p>The bootstrapped component, <span class="code">RootComponent</span>, subscribes to <span class="code">WebSocketService#onMessage()</span> in its constructor. Whenever a message comes in, the client acts. Here is where the code reusage I mentioned earlier comes in. The same mechanism which the server uses to apply commands to its data is also used by the client. All messages that are received by the client are assembled into a <span class="code">Command</span> and executed against the clients's data array. This way, the client's data is always a perfect reflection of the server's. Awesome!</p>
 
 <pre>
 import {Component} from "@angular/core";
@@ -253,7 +253,7 @@ export class RootComponent {
 }
 </pre>
 
-<p>I've implemented a more granular component representation for each data entry. It is also injected with the <span class="code">WebSocketService</span> which it uses to issue update and delete commands to the server by calling <span class="code">WebSocketService#send(msg: string)</span>.</p>
+<p>I've implemented a more granular component representation for each data entry. It is also injected with the <span class="code">WebSocketService</span> which it uses to issue <span class="code">UpdateCommand</span>s and <span class="code">DeleteCommand</span>s to the server by calling <span class="code">WebSocketService#send(msg: string)</span>.</p>
 
 <pre>
 import {Component, Input} from "@angular/core";

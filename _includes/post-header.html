@@ -2,7 +2,7 @@
     <h2>{{ include.post.title }}</h2>
     <div>{{ include.post.date | date: '%B %d, %Y' }}</div>
     <summary>{{ include.post.summary }}</summary>
-    {% if include.post.forkUrl != null %}
+    {% if include.showForkBtn and include.post.forkUrl != null %}
     <a class="button" href="{{ include.post.forkUrl }}"><span class="fa fa-code-fork"></span>Fork</a>
     {% endif %}
 </header>

@@ -38,7 +38,7 @@ body > footer a {
 .fa {
 	padding: 0em .1em 0em .1em;
 }
-.button, body > section > footer, header {
+.button, .button .fa, body > section > footer, header {
 	color: #a8a8a8;
 }
 hr {
@@ -63,8 +63,16 @@ summary {
 	color: grey;
 	border: 1px solid grey;
 }
-pre {
+
+.code, pre {
 	background-color: #e6e6ff;
+}
+.code {
+	padding: .2em .5em .2em .5em;
+	border-radius: 5px;
+	font-size: .9em;
+}
+pre {
 	padding: 1em;
 	line-height: 1.5em;
 	overflow: auto;

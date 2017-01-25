@@ -17,6 +17,8 @@ forkUrl: https://github.com/hendryau/Multi-User-WebSocket-Example
 
 <p>Open your console and <span class="code">cd</span> to the location where you've forked the repo. From there, run <span class="code">npm install</span> followed by <span class="code">npm run</span> to boot it up.</p>
 
+<img src="/images/websocket-emaple.gif">
+
 <h3>The Server</h3>
 
 <p>Behind the scenes, <span class="code">server.ts</span>, the application entry point, is executed. This creates a new <span class="code">WebSocketServerWrapper</span>, a wrapper that contains a <a href="https://github.com/websockets/ws">WebSocketServer</a> (a WebSocket implementation for Node). This is plugged in to a vanilla <a href="http://expressjs.com/">Express</a> server. Once the server is up, it's ready to receive messages. Three things are managed by the server... <span class="code">WebSocketServerWrapper#sockets</span> (the open WebSocket connections), <span class="code">WebSocketServerWrapper#dataArr</span> (the mocked database), and <span class="code">WebSocketServerWrapper#idCounter</span>. The <span class="code">idCounter</span> is a quick way to assign unique ids every time a client asks to create a new <span class="code">Data</span> object.</p>

@@ -4,6 +4,8 @@ body > footer > section > h1 {
 }
 img {
 	max-width: 100%;
+	display: block;
+	margin: 0 auto;
 }
 body {
 	line-height: 1.5em;
